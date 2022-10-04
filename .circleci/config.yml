@@ -50,7 +50,6 @@ jobs:
       - run:
           name: Deploy to AWS S3
           command: |
-            echo aws --version
             if [ "${CURRENT_BRANCH}" == "main" ]
             then
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_BUCKET_PRODUCTION} --delete
@@ -59,6 +58,16 @@ jobs:
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_BUCKET_STAGING} --delete
             else
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_BUCKET_DEV} --delete
+            fi
+            echo $AWS_BUCKET_NAME
+            if [ "${CIRCLE_BRANCH}" == "master" ]
+            then
+              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_BUCKET_NAME} --delete
+            elif [ "${CIRCLE_BRANCH}" == "staging" ]
+            then
+              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_BUCKET_NAME} --delete
+            else
+              aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_BUCKET_NAME} --delete
             fi
 
   deploy-to-aws-cloudfront:
