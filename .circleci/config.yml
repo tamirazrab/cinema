@@ -50,10 +50,6 @@ jobs:
       - run:
           name: Deploy to AWS S3
           command: |
-            echo $AWS_BUCKET_PRODUCTION
-            echo $AWS_BUCKET_STAGING
-            echo $AWS_BUCKET_DEV
-            echo $AWS_REGION
             if [ "${CURRENT_BRANCH}" == "main" ]
             then
               aws --region ${AWS_REGION} s3 sync ~/repo/build s3://${AWS_BUCKET_PRODUCTION} --delete
